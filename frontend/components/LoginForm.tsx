@@ -17,7 +17,8 @@ export default function LoginForm() {
     setIsLoading(true);
 
     try {
-      const res = await fetch("http://localhost:3001/auth/login", {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://clinic-backend-sedm.onrender.com';
+      const res = await fetch(`${apiUrl}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

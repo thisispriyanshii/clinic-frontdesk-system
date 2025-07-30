@@ -16,7 +16,8 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      const endpoint = isSignUp ? 'http://localhost:3001/auth/register' : 'http://localhost:3001/auth/login';
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://clinic-backend-sedm.onrender.com';
+      const endpoint = isSignUp ? `${apiUrl}/auth/register` : `${apiUrl}/auth/login`;
       const response = await fetch(endpoint, {
         method: 'POST',
         headers: {

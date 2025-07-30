@@ -2,7 +2,7 @@
 
 import { ReactNode, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Navbar from '@/components/Navbar';
+import Navbar from '@/app/components/Navbar';
 
 export default function AuthenticatedLayout({ children }: { children: ReactNode }) {
   const router = useRouter();
@@ -13,9 +13,11 @@ export default function AuthenticatedLayout({ children }: { children: ReactNode 
   }, [router]);
 
   return (
-    <div className="flex">
+    <div className="flex h-screen bg-zinc-950">
       <Navbar />
-      <main className="ml-64 p-8 w-full">{children}</main>
+      <main className="flex-1 overflow-auto bg-zinc-950">
+        {children}
+      </main>
     </div>
   );
 }

@@ -18,9 +18,6 @@ const nextConfig: NextConfig = {
     });
     return config;
   },
-  env: {
-    PORT: "3001",
-  },
 };
 
 export default nextConfig;

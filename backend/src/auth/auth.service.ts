@@ -19,41 +19,10 @@ export class AuthService {
     return null;
   }
 
-  async login(loginDto: { username: string; password: string }) {
-    const user = await this.validateUser(loginDto.username, loginDto.password);
-    if (!user) {
-      throw new UnauthorizedException('Invalid credentials');
-    }
-    
+  async login(user: any) {
     const payload = { username: user.username, sub: user.id };
     return {
       access_token: this.jwtService.sign(payload),
-      user: {
-        id: user.id,
-        username: user.username,
-      },
-    };
-  }
-
-  async register(registerDto: { username: string; password: string }) {
-    const existingUser = await this.userService.findByUsername(registerDto.username);
-    if (existingUser) {
-      throw new UnauthorizedException('Username already exists');
-    }
-
-    const hashedPassword = await bcrypt.hash(registerDto.password, 10);
-    const newUser = await this.userService.create({
-      username: registerDto.username,
-      password: hashedPassword,
-    });
-
-    const payload = { username: newUser.username, sub: newUser.id };
-    return {
-      access_token: this.jwtService.sign(payload),
-      user: {
-        id: newUser.id,
-        username: newUser.username,
-      },
     };
   }
 }

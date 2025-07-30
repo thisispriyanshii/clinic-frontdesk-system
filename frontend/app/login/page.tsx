@@ -2,13 +2,12 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { toast } from 'react-hot-toast';
+import toast from 'react-hot-toast';
 
 export default function LoginPage() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const [isSignUp, setIsSignUp] = useState(false);
   const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -16,9 +15,7 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://clinic-backend-sedm.onrender.com';
-      const endpoint = isSignUp ? `${apiUrl}/auth/register` : `${apiUrl}/auth/login`;
-      const response = await fetch(endpoint, {
+      const res = await fetch('http://localhost:3000/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -26,22 +23,17 @@ export default function LoginPage() {
         body: JSON.stringify({ username, password }),
       });
 
-      if (response.ok) {
-        const data = await response.json();
-        if (!isSignUp) {
-          localStorage.setItem('token', data.access_token);
-          toast.success('Login successful!');
-          router.push('/dashboard');
-        } else {
-          toast.success('Registration successful! Please sign in.');
-          setIsSignUp(false);
-        }
+      if (res.ok) {
+        const data = await res.json();
+        localStorage.setItem('token', data.access_token);
+        toast.success('Login successful!');
+        router.push('/dashboard');
       } else {
-        toast.error(isSignUp ? 'Registration failed. Please try again.' : 'Login failed. Please check your credentials.');
+        toast.error('Login failed. Please check your credentials.');
       }
     } catch (error) {
       console.error('Auth error:', error);
-      toast.error(isSignUp ? 'Registration failed. Please try again.' : 'Login failed. Please try again.');
+      toast.error('Login failed. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -56,12 +48,10 @@ export default function LoginPage() {
             <span className="text-white text-3xl">🏥</span>
           </div>
           <h1 className="text-3xl font-bold text-white mb-2">Clinic Front Desk</h1>
-          <p className="text-zinc-400 text-lg">
-            {isSignUp ? 'Create your account' : 'Welcome back! Please sign in to your account.'}
-          </p>
+          <p className="text-zinc-400 text-lg">Welcome back! Please sign in to your account.</p>
         </div>
 
-        {/* Login/Register Form */}
+        {/* Login Form */}
         <div className="bg-zinc-900 rounded-2xl shadow-xl border border-zinc-800 p-8">
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Username Field */}
@@ -112,33 +102,18 @@ export default function LoginPage() {
               disabled={isLoading}
               className="w-full bg-purple-600 text-white py-3 px-4 rounded-lg hover:bg-purple-700 focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-zinc-900 transition-all duration-200 font-medium disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              {isLoading ? (isSignUp ? 'Creating account...' : 'Signing in...') : (isSignUp ? 'Create Account' : 'Sign In')}
+              {isLoading ? 'Signing in...' : 'Sign In'}
             </button>
           </form>
 
-          {/* Toggle between Sign In and Sign Up */}
-          <div className="mt-6 text-center">
-            <p className="text-zinc-400 text-sm">
-              {isSignUp ? 'Already have an account?' : "Don't have an account?"}
-              <button
-                onClick={() => setIsSignUp(!isSignUp)}
-                className="ml-1 text-purple-400 hover:text-purple-300 font-medium transition-colors"
-              >
-                {isSignUp ? 'Sign In' : 'Sign Up'}
-              </button>
-            </p>
-          </div>
-
           {/* Demo Credentials */}
-          {!isSignUp && (
-            <div className="mt-6 p-4 bg-zinc-800 rounded-lg border border-zinc-700">
-              <h3 className="text-sm font-medium text-white mb-2">Demo Credentials</h3>
-              <div className="text-xs text-zinc-400 space-y-1">
-                <p><strong>Username:</strong> admin</p>
-                <p><strong>Password:</strong> password</p>
-              </div>
+          <div className="mt-6 p-4 bg-zinc-800 rounded-lg border border-zinc-700">
+            <h3 className="text-sm font-medium text-white mb-2">Demo Credentials</h3>
+            <div className="text-xs text-zinc-400 space-y-1">
+              <p><strong>Username:</strong> frontdesk</p>
+              <p><strong>Password:</strong> password123</p>
             </div>
-          )}
+          </div>
         </div>
 
         {/* Footer */}

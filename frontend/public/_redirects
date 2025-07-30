@@ -1,7 +1,7 @@
-# Handle client-side routing
+# Handle Next.js routing
 /*    /index.html   200
 
-# API routes (if needed)
+# API routes redirect to backend
 /api/*  https://clinic-backend-sedm.onrender.com/api/:splat  200
 
 # Security headers

@@ -13,7 +13,7 @@ import { TestController } from './test/test.controller';
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: process.env.DB_HOST!,
-      port: parseInt(process.env.DB_PORT || '3306'),
+      port: parseInt(process.env.DB_PORT || '3333'),
       username: process.env.DB_USER!,
       password: process.env.DB_PASSWORD!,
       database: process.env.DB_NAME!,
@@ -26,6 +26,7 @@ import { TestController } from './test/test.controller';
         ssl: {
           rejectUnauthorized: false,
         },
+        connectionLimit: 10,
       },
     }),
     JwtModule.register({
